@@ -1,0 +1,21 @@
+# PyTorch nalezy zainstalowac osobno, komenda dobrana do konfiguracji sprzetowej:
+# https://pytorch.org/get-started/locally
+#   torch==2.10.0
+#
+# Ponizsze wersje odpowiadaja srodowisku, w ktorym wykonano eksperymenty
+# (Kaggle Notebooks, Python 3.12.13, CUDA 12.8).
+
+librosa==0.11.0
+soundfile>=0.12.1
+numba>=0.59
+
+numpy>=1.26,<2.3
+pandas>=2.1
+scipy>=1.11
+scikit-learn>=1.4
+
+matplotlib>=3.8
+seaborn>=0.13
+
+jupyterlab>=4.0
+ipywidgets>=8.1
