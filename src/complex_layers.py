@@ -78,26 +78,30 @@ class ComplexLinear(nn.Module):
     do ComplexConv2d. Inicjalizacja wag przebiega w reprezentacji biegunowej.
     """
 
-    def __init__(self, cin: int, cout: int, bias: bool = True):
-        super().__init__()
-        self.lr = nn.Linear(cin, cout, bias=bias)
-        self.li = nn.Linear(cin, cout, bias=bias)
-        sigma = 1.0 / math.sqrt(2 * cin)
-        with torch.no_grad():
-            mag = torch.from_numpy(
-                np.random.rayleigh(sigma, size=tuple(self.lr.weight.shape))
-            ).float()
-            phase = torch.empty_like(self.lr.weight).uniform_(-math.pi, math.pi)
-            self.lr.weight.copy_(mag * torch.cos(phase))
-            self.li.weight.copy_(mag * torch.sin(phase))
+    def __init__(self, cin, cout, bias=True):
+            super().__init__()
+            self.lr = nn.Linear(cin, cout, bias=False)
+            self.li = nn.Linear(cin, cout, bias=False)
+            self.use_bias = bias
             if bias:
-                self.lr.bias.zero_()
-                self.li.bias.zero_()
-
-    def forward(self, z: torch.Tensor) -> torch.Tensor:
+                self.b_r = nn.Parameter(torch.zeros(cout))
+                self.b_i = nn.Parameter(torch.zeros(cout))
+            sigma = 1.0 / math.sqrt(2 * cin)
+            with torch.no_grad():
+                mag = torch.from_numpy(
+                    np.random.rayleigh(sigma, size=tuple(self.lr.weight.shape))).float()
+                phase = torch.empty_like(self.lr.weight).uniform_(-math.pi, math.pi)
+                self.lr.weight.copy_(mag * torch.cos(phase))
+                self.li.weight.copy_(mag * torch.sin(phase))
+    
+    def forward(self, z):
         zr, zi = z.real, z.imag
-        return torch.complex(self.lr(zr) - self.li(zi),
-                             self.lr(zi) + self.li(zr))
+        out_r = self.lr(zr) - self.li(zi)
+        out_i = self.lr(zi) + self.li(zr)
+        if self.use_bias:
+            out_r = out_r + self.b_r
+            out_i = out_i + self.b_i
+        return torch.complex(out_r, out_i)
 
 
 class ComplexBatchNorm2d(nn.Module):

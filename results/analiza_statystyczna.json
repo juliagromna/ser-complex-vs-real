@@ -1,0 +1,50 @@
+{
+  "metoda": "bootstrap blokowy na poziomie mówców",
+  "liczba_replikacji": 10000,
+  "poziom_ufnosci": 0.95,
+  "ziarno": 42,
+  "liczba_mowcow": 14,
+  "liczba_nagran": 1142,
+  "porownania": {
+    "M1 (MFCC) -> M2 (|STFT|)": {
+      "czynnik": "parametryzacja widma i stopnie redukcji",
+      "delta_uar": 0.017784,
+      "ci_low": -0.013684,
+      "ci_high": 0.046464,
+      "p": 0.2486,
+      "istotna": false
+    },
+    "M2 (|STFT|) -> M3 (Re/Im)": {
+      "czynnik": "udostępnienie informacji fazowej",
+      "delta_uar": -0.029348,
+      "ci_low": -0.05102,
+      "ci_high": -0.007791,
+      "p": 0.011,
+      "istotna": true
+    },
+    "M3 (Re/Im) -> M4 (zespolony)": {
+      "czynnik": "potok zespolony (arytmetyka i pozostałe zmiany)",
+      "delta_uar": -0.139289,
+      "ci_low": -0.174542,
+      "ci_high": -0.109041,
+      "p": 0.0,
+      "istotna": true
+    },
+    "M1 (MFCC) -> M4 (zespolony)": {
+      "czynnik": "wszystkie zmiany łącznie",
+      "delta_uar": -0.150853,
+      "ci_low": -0.18084,
+      "ci_high": -0.119925,
+      "p": 0.0,
+      "istotna": true
+    },
+    "M4 -> M4 stabilizowany": {
+      "czynnik": "mechanizmy stabilizujące proces uczenia",
+      "delta_uar": 0.007089,
+      "ci_low": -0.02809,
+      "ci_high": 0.0411,
+      "p": 0.687,
+      "istotna": false
+    }
+  }
+}
